@@ -1,91 +1,209 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Will You Be My Valentine?</title>
+<meta charset="UTF-8">
+<title>Will You Be My Valentine?</title>
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
 
-    body {
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #faf7f2;
-      font-family: 'Inter', sans-serif;
-      color: #2c2c2c;
-    }
+body{
+  height:100vh;
+  overflow:hidden;
+  font-family:'Poppins',sans-serif;
+}
 
-    .card {
-      text-align: center;
-      max-width: 520px;
-      padding: 40px;
-      animation: fadeIn 2s ease forwards;
-    }
+/* Background */
+.bg{
+  position:fixed;
+  inset:0;
+  background:url('background.jpg') center/cover no-repeat;
+  filter:brightness(0.75);
+  z-index:-3;
+}
 
-    h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.6rem;
-      margin-bottom: 20px;
-    }
+/* Glitter */
+.glitter{
+  position:fixed;
+  top:-10px;
+  width:6px;
+  height:6px;
+  background:rgba(255,255,255,0.9);
+  border-radius:50%;
+  animation:fall linear infinite;
+  z-index:-2;
+}
 
-    p {
-      font-size: 1.05rem;
-      line-height: 1.8;
-      margin-bottom: 28px;
-      opacity: 0.9;
-    }
+@keyframes fall{
+  to{transform:translateY(110vh);}
+}
 
-    .leaf {
-      font-size: 2rem;
-      margin-bottom: 14px;
-    }
+/* Center */
+.container{
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  color:white;
+  text-align:center;
+}
 
-    .question {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.4rem;
-      margin-top: 30px;
-    }
+/* Hinata shy text */
+h1{
+  font-size:2.2rem;
+  margin-bottom:10px;
+  animation:shyFade 2s ease forwards;
+}
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(12px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-  </style>
+@keyframes shyFade{
+  from{opacity:0;transform:translateY(15px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* Kurama */
+.emoji{
+  width:110px;
+  margin:10px 0 20px;
+  animation:float 3s ease-in-out infinite;
+}
+
+@keyframes float{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-12px);}
+}
+
+/* Buttons */
+.buttons{
+  margin-top:20px;
+  position:relative;
+}
+
+button{
+  padding:12px 30px;
+  font-size:1rem;
+  border:none;
+  border-radius:30px;
+  cursor:pointer;
+  margin:0 10px;
+}
+
+#yes{
+  background:#ff6b9d;
+  color:white;
+}
+
+#no{
+  background:white;
+  color:#333;
+  position:absolute;
+}
+
+/* Hearts */
+.heart{
+  position:fixed;
+  font-size:20px;
+  animation:heartFloat 2s ease-out forwards;
+}
+
+@keyframes heartFloat{
+  to{
+    transform:translateY(-100px);
+    opacity:0;
+  }
+}
+</style>
 </head>
+
 <body>
 
-  <div class="card">
-    <div class="leaf">🍃</div>
+<div class="bg"></div>
 
-    <h1>In Every Timeline</h1>
+<!-- Music -->
+<audio id="bgMusic" loop>
+  <source src="every-breath-you-take.mp3" type="audio/mpeg">
+</audio>
 
-    <p>
-      Just like chakra finds its way to the heart,<br>
-      every path I take somehow leads to you.<br><br>
+<audio id="loveMusic" loop>
+  <source src="love-music.mp3" type="audio/mpeg">
+</audio>
 
-      Through every mission, every lifetime,<br>
-      I’d choose you again — without hesitation.
-    </p>
+<div class="container" id="main">
+  <h1>Will you be my Valentine? ❤️</h1>
+  <img src="kurama.png" class="emoji" alt="Kurama">
 
-    <div class="question">
-      Will you be my Valentine?
-    </div>
+  <div class="buttons">
+    <button id="yes">Yes</button>
+    <button id="no">No</button>
   </div>
+</div>
+
+<script>
+/* Glitter */
+for(let i=0;i<40;i++){
+  const g=document.createElement('div');
+  g.className='glitter';
+  g.style.left=Math.random()*100+'vw';
+  g.style.animationDuration=(Math.random()*3+2)+'s';
+  g.style.opacity=Math.random();
+  document.body.appendChild(g);
+}
+
+/* Music fade in */
+const bgMusic=document.getElementById('bgMusic');
+bgMusic.volume=0;
+document.addEventListener('click',()=>{
+  bgMusic.play();
+  let v=0;
+  const fade=setInterval(()=>{
+    if(v<0.35){v+=0.01;bgMusic.volume=v;}
+    else clearInterval(fade);
+  },200);
+},{once:true});
+
+/* No button dodge */
+const noBtn=document.getElementById('no');
+function moveNo(){
+  noBtn.style.left=Math.random()*(window.innerWidth-120)+'px';
+  noBtn.style.top=Math.random()*(window.innerHeight-120)+'px';
+}
+noBtn.addEventListener('mouseover',moveNo);
+noBtn.addEventListener('touchstart',moveNo);
+
+/* Heart burst */
+function hearts(x,y){
+  for(let i=0;i<10;i++){
+    const h=document.createElement('div');
+    h.className='heart';
+    h.innerText='❤️';
+    h.style.left=x+'px';
+    h.style.top=y+'px';
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),2000);
+  }
+}
+
+/* YES */
+document.getElementById('yes').onclick=(e)=>{
+  hearts(e.clientX,e.clientY);
+
+  bgMusic.pause();
+  const love=document.getElementById('loveMusic');
+  love.volume=0.4;
+  love.play();
+
+  document.getElementById('main').innerHTML=`
+    <h1 style="animation:none;font-size:2.4rem;">
+      I knew it… 👉👈💜
+    </h1>
+    <p style="margin-top:12px;font-size:1.1rem;">
+      Hinata would be proud.
+    </p>
+  `;
+};
+</script>
 
 </body>
 </html>
