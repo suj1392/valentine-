@@ -8,6 +8,17 @@
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
+  .tap{
+  font-size:0.85rem;
+  opacity:0.75;
+  margin-bottom:12px;
+  animation:pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse{
+  0%,100%{opacity:0.5;}
+  50%{opacity:0.9;}
+}
 
 body{
   height:100vh;
@@ -132,6 +143,7 @@ button{
 
 <div class="container" id="main">
   <h1>Will you be my Valentine?🤪🌹💕</h1>
+  <p class="tap" id="tapHint">tap anywhere 🤍</p>
   <img src="kurama.png" class="emoji" alt="Kurama">
 
   <div class="buttons">
@@ -154,14 +166,11 @@ for(let i=0;i<40;i++){
 /* Music fade in */
 const bgMusic=document.getElementById('bgMusic');
 bgMusic.volume=0;
-document.addEventListener('click',()=>{
+ddocument.addEventListener('click', () => {
+  bgMusic.muted = false;
   bgMusic.play();
-  let v=0;
-  const fade=setInterval(()=>{
-    if(v<0.35){v+=0.01;bgMusic.volume=v;}
-    else clearInterval(fade);
-  },200);
-},{once:true});
+  document.getElementById('tapHint').style.display = 'none';
+}, { once: true });
 
 /* No button dodge */
 const noBtn=document.getElementById('no');
